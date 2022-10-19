@@ -5,7 +5,8 @@ set(CMAKE_CXX_STANDARD 17)
 
 set (SRC
     ../src/ios_main.cpp
-    # not including main.cpp
+    ../src/nn_coreml_ios.mm
+    # not including main.cpp, nn_coreml.mm
     ../../YaneuraOu/source/types.cpp
     ../../YaneuraOu/source/bitboard.cpp
     ../../YaneuraOu/source/misc.cpp
@@ -37,7 +38,17 @@ set (SRC
     ../../YaneuraOu/source/testcmd/normal_test_cmd.cpp
     ../../YaneuraOu/source/testcmd/benchmark.cpp
     ../../YaneuraOu/source/engine/yaneuraou-engine/yaneuraou-search.cpp
+    ../../YaneuraOu/source/eval/deep/nn_types.cpp
+    ../../YaneuraOu/source/eval/deep/nn.cpp
+    ../../YaneuraOu/source/eval/deep/nn_onnx_runtime.cpp
+    ../../YaneuraOu/source/eval/deep/nn_tensorrt.cpp
+    ../../YaneuraOu/source/engine/dlshogi-engine/dlshogi_searcher.cpp
+    ../../YaneuraOu/source/engine/dlshogi-engine/PrintInfo.cpp
+    ../../YaneuraOu/source/engine/dlshogi-engine/UctSearch.cpp
+    ../../YaneuraOu/source/engine/dlshogi-engine/Node.cpp
+    ../../YaneuraOu/source/engine/dlshogi-engine/YaneuraOu_dlshogi_bridge.cpp
 )
 add_library(yaneuraou STATIC ${SRC})
 
-target_compile_options(yaneuraou PUBLIC -fno-exceptions -fno-rtti -Wextra -MMD -MP -fpermissive -Ofast -DNDEBUG -D_LINUX -DUNICODE -DNO_EXCEPTIONS -DMATERIAL_LEVEL=1 -DIS_64BIT -DUSE_AVX2 -DUSE_BMI2 -mbmi -mbmi2 -mavx2 -mpopcnt -DYANEURAOU_ENGINE_MATERIAL)
+target_compile_options(yaneuraou PUBLIC -fno-exceptions -fno-rtti -Wextra -MMD -MP -fpermissive -Ofast -DNDEBUG -D_LINUX -DUNICODE -DNO_EXCEPTIONS -DIS_64BIT -DUSE_AVX2 -DUSE_BMI2 -mbmi -mbmi2 -mavx2 -mpopcnt -fobjc-arc -DYANEURAOU_ENGINE_DEEP -DCOREML)
+target_link_options(yaneuraou PUBLIC -framework Foundation -framework CoreML)

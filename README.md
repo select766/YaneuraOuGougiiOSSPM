@@ -9,6 +9,8 @@
 Xcode 16.0, cmake 3.24.1
 
 ```
+git submodule init
+git submodule update
 cd build
 ./build.bash
 ```

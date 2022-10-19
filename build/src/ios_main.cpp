@@ -1,4 +1,4 @@
-﻿//#include <iostream>
+//#include <iostream>
 //#include "bitboard.h"
 //#include "position.h"
 #include "../../YaneuraOu/source/search.h"
@@ -15,6 +15,8 @@
 #include <arpa/inet.h>
 
 static int socket_fd;
+
+std::string modelc_url_cache;
 
 static int socket_connect(const char* server_ip, int server_port) {
     int socket_fd = socket(AF_INET, SOCK_STREAM, 0);
@@ -113,7 +115,8 @@ static void yaneuraou_ios_thread_main() {
 	std::cin.rdbuf(default_in);
 }
 
-extern "C" int yaneuraou_ios_main(const char* server_ip, int server_port) {
+extern "C" int yaneuraou_ios_main(const char* server_ip, int server_port, const char* modelc_url) {
+    modelc_url_cache = modelc_url;
 	socket_fd = socket_connect(server_ip, server_port);
 	if (socket_fd < 0) {
 		return 1;
