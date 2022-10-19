@@ -1,8 +1,10 @@
-# YaneuraOuiOSSPM
+# FukauraOuiOSSPM
 
-やねうら王をiOS向けのSwift Package Managerパッケージとしてビルドするスクリプト。
+ふかうら王（やねうら王の深層学習版）をiOS向けのSwift Package Managerパッケージとしてビルドするスクリプト。
 
-試作版。駒得評価のみ。
+モデルは含まれていない。このパッケージを読み込むSwiftアプリ側に組み込んで、そのアドレスを渡す必要がある。アプリ側の実装: https://github.com/select766/FukauraOuiOS
+
+パッケージ名は`YaneuraOuiOSSPM`となっている。
 
 # ビルド
 
