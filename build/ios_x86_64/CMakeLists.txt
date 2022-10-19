@@ -37,7 +37,13 @@ set (SRC
     ../../YaneuraOu/source/testcmd/mate_test_cmd.cpp
     ../../YaneuraOu/source/testcmd/normal_test_cmd.cpp
     ../../YaneuraOu/source/testcmd/benchmark.cpp
-    ../../YaneuraOu/source/engine/yaneuraou-engine/yaneuraou-search.cpp
+    ../../YaneuraOu/source/book/makebook.cpp
+    ../../YaneuraOu/source/book/makebook2015.cpp
+    ../../YaneuraOu/source/book/makebook2019.cpp
+    ../../YaneuraOu/source/book/makebook2021.cpp
+    ../../YaneuraOu/source/learn/learner.cpp
+    ../../YaneuraOu/source/learn/learning_tools.cpp
+    ../../YaneuraOu/source/learn/multi_think.cpp
     ../../YaneuraOu/source/eval/deep/nn_types.cpp
     ../../YaneuraOu/source/eval/deep/nn.cpp
     ../../YaneuraOu/source/eval/deep/nn_onnx_runtime.cpp
