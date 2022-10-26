@@ -9,12 +9,13 @@
 
 // cin/coutをsocketにリダイレクト
 #include <iostream>
+#include <unistd.h>
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
 
-static int socket_fd;
+static int socket_fd = -1;
 
 std::string modelc_url_cache;
 // 使用デバイス
@@ -42,6 +43,13 @@ static int socket_connect(const char* server_ip, int server_port) {
     }
 
     return socket_fd;
+}
+
+static int socket_disconnect() {
+    if (socket_fd > 0) {
+        close(socket_fd);
+        socket_fd = -1;
+    }
 }
 
 class myoutstreambuf : public std::streambuf {
@@ -119,6 +127,8 @@ static void yaneuraou_ios_thread_main() {
 
 	std::cout.rdbuf(default_out);
 	std::cin.rdbuf(default_in);
+    
+    socket_disconnect();
 }
 
 extern "C" int yaneuraou_ios_main(const char* server_ip, int server_port, const char* modelc_url, int coreml_compute_units) {
