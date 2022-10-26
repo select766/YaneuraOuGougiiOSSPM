@@ -12,6 +12,7 @@ using namespace std;
 using namespace Tools;
 
 extern std::string modelc_url_cache;
+extern int coreml_compute_units_cache;
 
 /// Model Prediction Input Type
 API_AVAILABLE(macos(10.15), ios(13.0), watchos(6.0), tvos(13.0)) __attribute__((visibility("hidden")))
@@ -101,7 +102,7 @@ namespace Eval::dlshogi
 		// MLComputeUnitsCPUAndGPU = 1,
 		// MLComputeUnitsAll = 2
 		// Allで損をする事例は見つかっていないが、選べるようにすることも考えられる。
-		config.computeUnits = MLComputeUnitsAll;
+		config.computeUnits = (MLComputeUnits)coreml_compute_units_cache;
 
 		NSError *error = nil;
 

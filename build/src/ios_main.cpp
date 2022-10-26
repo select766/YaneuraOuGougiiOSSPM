@@ -17,6 +17,12 @@
 static int socket_fd;
 
 std::string modelc_url_cache;
+// 使用デバイス
+// MLComputeUnitsCPUOnly = 0,
+// MLComputeUnitsCPUAndGPU = 1,
+// MLComputeUnitsAll = 2
+// Allで損をする事例は見つかっていないが、選べるようにすることも考えられる。
+int coreml_compute_units_cache;
 
 static int socket_connect(const char* server_ip, int server_port) {
     int socket_fd = socket(AF_INET, SOCK_STREAM, 0);
@@ -115,8 +121,9 @@ static void yaneuraou_ios_thread_main() {
 	std::cin.rdbuf(default_in);
 }
 
-extern "C" int yaneuraou_ios_main(const char* server_ip, int server_port, const char* modelc_url) {
+extern "C" int yaneuraou_ios_main(const char* server_ip, int server_port, const char* modelc_url, int coreml_compute_units) {
     modelc_url_cache = modelc_url;
+    coreml_compute_units_cache = coreml_compute_units;
 	socket_fd = socket_connect(server_ip, server_port);
 	if (socket_fd < 0) {
 		return 1;
