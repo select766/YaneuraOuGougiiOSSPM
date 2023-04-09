@@ -8,12 +8,7 @@
 
 #include "../../YaneuraOu/source/usi.h"
 
-using namespace std;
-using namespace Tools;
-
-extern std::string modelc_url_cache;
-extern int coreml_compute_units_cache;
-
+// Objective-Cの定義はnamespace内に入れることができない
 /// Model Prediction Input Type
 API_AVAILABLE(macos(10.15), ios(13.0), watchos(6.0), tvos(13.0)) __attribute__((visibility("hidden")))
 @interface DlShogiResnetInput : NSObject<MLFeatureProvider>
@@ -90,6 +85,14 @@ API_AVAILABLE(macos(10.15), ios(13.0), watchos(6.0), tvos(13.0)) __attribute__((
 
 @end
 
+
+namespace YANEURAOU_GOUGI_NAMESPACE {
+
+using namespace std;
+using namespace Tools;
+
+extern std::string modelc_url_cache;
+extern int coreml_compute_units_cache;
 namespace Eval::dlshogi
 {
 	// モデルファイルの読み込み。
@@ -180,6 +183,7 @@ namespace Eval::dlshogi
 	}
 
 } // namespace Eval::dlshogi
+}
 
 
 #endif // defined(YANEURAOU_ENGINE_DEEP) && defined(COREML)

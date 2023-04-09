@@ -4,12 +4,12 @@
 import PackageDescription
 
 let package = Package(
-    name: "YaneuraOuiOSSPM",
+    name: "YaneuraOuGougiiOSSPM",
     products: [
         // Products define the executables and libraries a package produces, and make them visible to other packages.
         .library(
-            name: "YaneuraOuiOSSPM",
-            targets: ["YaneuraOuiOSSPM"]),
+            name: "YaneuraOuGougiiOSSPM",
+            targets: ["YaneuraOuGougiiOSSPM"]),
     ],
     dependencies: [
         // Dependencies declare other packages that this package depends on.
@@ -22,7 +22,7 @@ let package = Package(
             name: "libyaneuraou",
             path: "Frameworks/libyaneuraou.xcframework"),
         .target(
-            name: "YaneuraOuiOSSPM",
+            name: "YaneuraOuGougiiOSSPM",
             dependencies: ["libyaneuraou"]),
     ]
 )

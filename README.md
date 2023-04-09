@@ -4,7 +4,7 @@
 
 モデルは含まれていない。このパッケージを読み込むSwiftアプリ側に組み込んで、そのアドレスを渡す必要がある。アプリ側の実装: https://github.com/select766/FukauraOuiOS
 
-パッケージ名は`YaneuraOuiOSSPM`となっている。
+パッケージ名は`YaneuraOuGougiiOSSPM`となっている。
 
 # ビルド
 
@@ -21,7 +21,7 @@ cd build
 
 インターフェースとなる関数は `build/src/ios_main.cpp` に記述する。
 
-関数シグネチャは `build/include/yaneuraou.h`及び`Sources/YaneuraOuiOSSPM/include/yaneuraou.h`に同じ内容を記述する。
+関数シグネチャは `build/include/yaneuraou.h`及び`Sources/YaneuraOuGougiiOSSPM/include/yaneuraou.h`に同じ内容を記述する。
 
 ビルドするソースコードリスト、コンパイラオプションは `build/ios_{arm64,x86_64}/CMakeLists.txt` に記述する。(本当は１ファイルにまとめたいのだがcmakeの知識が足りないだけ)
 

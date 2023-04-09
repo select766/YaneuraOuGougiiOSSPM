@@ -1,0 +1,6 @@
+module YaneuraOuGougiiOSSPM {
+    umbrella header "shim.h"
+    export *
+    link "yaneuraou"
+}
+

@@ -15,6 +15,7 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 
+namespace YANEURAOU_GOUGI_NAMESPACE {
 static int socket_fd = -1;
 
 std::string modelc_url_cache;
@@ -89,7 +90,6 @@ protected:
 private:
 	int socket_fd;
 };
-
 static void yaneuraou_ios_thread_main() {
 	myoutstreambuf outs(socket_fd);
 	myinstreambuf ins(socket_fd);
@@ -130,15 +130,16 @@ static void yaneuraou_ios_thread_main() {
     
     socket_disconnect();
 }
+}
 
 extern "C" int yaneuraou_ios_main(const char* server_ip, int server_port, const char* modelc_url, int coreml_compute_units) {
-    modelc_url_cache = modelc_url;
-    coreml_compute_units_cache = coreml_compute_units;
-	socket_fd = socket_connect(server_ip, server_port);
-	if (socket_fd < 0) {
+    YANEURAOU_GOUGI_NAMESPACE::modelc_url_cache = modelc_url;
+    YANEURAOU_GOUGI_NAMESPACE::coreml_compute_units_cache = coreml_compute_units;
+	YANEURAOU_GOUGI_NAMESPACE::socket_fd = YANEURAOU_GOUGI_NAMESPACE::socket_connect(server_ip, server_port);
+	if (YANEURAOU_GOUGI_NAMESPACE::socket_fd < 0) {
 		return 1;
 	}
-    std::thread thread(yaneuraou_ios_thread_main);
+    std::thread thread(YANEURAOU_GOUGI_NAMESPACE::yaneuraou_ios_thread_main);
     thread.detach();
     return 0;
 }
