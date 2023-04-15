@@ -79,9 +79,16 @@ register_iostream_thread();
 """)
     elif path.name == "yaneuraou-search.cpp":
         source = source.replace("::search<Root>", "YANEURAOU_GOUGI_NAMESPACE::search<Root>")
+        # FV_SCALEを水匠5に合わせた24にする
+        source = source.replace('o["FV_SCALE"] << Option(16, 1, 128);', 'o["FV_SCALE"] << Option(24, 1, 128);')
     elif path.name == "evaluate_nnue.cpp":
+        # FV_SCALEを水匠5に合わせた24にする
+        source = source.replace("int FV_SCALE = 16;", "int FV_SCALE = 24;")
         source = source.replace("namespace Eval {", "extern std::string nnue_file_path;\nnamespace Eval {")
         source = source.replace("const std::string file_path = Path::Combine(dir_name, file_name);", "const std::string file_path = nnue_file_path;")
+    elif path.name == "YaneuraOu_dlshogi_bridge.cpp":
+        # DNN_Model1を空欄にする
+        source = source.replace('R"(model.mlmodel)"', '""')
 
     return source
 
