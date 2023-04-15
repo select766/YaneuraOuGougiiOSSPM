@@ -89,6 +89,9 @@ register_iostream_thread();
     elif path.name == "YaneuraOu_dlshogi_bridge.cpp":
         # DNN_Model1を空欄にする
         source = source.replace('R"(model.mlmodel)"', '""')
+    elif path.name == "usi_option.cpp":
+        # デフォルトハッシュサイズを256MBにする(1024MBだと時折確保失敗して落ちる)
+        source = source.replace('o["USI_Hash"] << Option(1024, 1, MaxHashMB, [](const Option& o) { /* TT.resize(o); */ });', 'o["USI_Hash"] << Option(256, 1, MaxHashMB, [](const Option& o) { /* TT.resize(o); */ });')
 
     return source
 
