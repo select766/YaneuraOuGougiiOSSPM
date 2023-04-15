@@ -79,6 +79,10 @@ register_iostream_thread();
 """)
     elif path.name == "yaneuraou-search.cpp":
         source = source.replace("::search<Root>", "YANEURAOU_GOUGI_NAMESPACE::search<Root>")
+    elif path.name == "evaluate_nnue.cpp":
+        source = source.replace("namespace Eval {", "extern std::string nnue_file_path;\nnamespace Eval {")
+        source = source.replace("const std::string file_path = Path::Combine(dir_name, file_name);", "const std::string file_path = nnue_file_path;")
+
     return source
 
 def modify_source(path: Path):

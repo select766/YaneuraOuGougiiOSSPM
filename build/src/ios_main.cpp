@@ -15,6 +15,17 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 
+
+namespace yaneuraou_gougi_deep {
+	extern std::string modelc_url_cache;
+	// 使用デバイス
+	// MLComputeUnitsCPUOnly = 0,
+	// MLComputeUnitsCPUAndGPU = 1,
+	// MLComputeUnitsAll = 2
+	// Allで損をする事例は見つかっていないが、選べるようにすることも考えられる。
+	extern int coreml_compute_units_cache;
+}
+
 #if defined(YANEURAOU_ENGINE_DEEP)
 namespace YANEURAOU_GOUGI_NAMESPACE {
 	std::string modelc_url_cache;
@@ -28,9 +39,13 @@ namespace YANEURAOU_GOUGI_NAMESPACE {
 #endif
 
 
+namespace yaneuraou_gougi_nnue {
+	extern std::string nnue_file_path;
+}
+
 #if defined(YANEURAOU_ENGINE_NNUE)
 namespace YANEURAOU_GOUGI_NAMESPACE {
-	// TODO NNUE側のグローバル変数
+	std::string nnue_file_path;
 }
 #endif
 
@@ -163,7 +178,7 @@ void register_iostream_thread(int engine_id)
 }
 
 
-extern "C" int yaneuraou_ios_main(const char* deep_server_ip, int deep_server_port, const char* deep_modelc_url, int deep_coreml_compute_units, const char* nnue_server_ip, int nnue_server_port) {
+extern "C" int yaneuraou_ios_main(const char* deep_server_ip, int deep_server_port, const char* deep_modelc_url, int deep_coreml_compute_units, const char* nnue_server_ip, int nnue_server_port, const char* nnue_file_path) {
 	// stdioを独自に切り替え
 	myoutstreambuf *outs = new myoutstreambuf();
 	myinstreambuf *ins = new myinstreambuf();
@@ -171,6 +186,7 @@ extern "C" int yaneuraou_ios_main(const char* deep_server_ip, int deep_server_po
 	std::cin.rdbuf(ins);
     yaneuraou_gougi_deep::modelc_url_cache = deep_modelc_url;
     yaneuraou_gougi_deep::coreml_compute_units_cache = deep_coreml_compute_units;
+	yaneuraou_gougi_nnue::nnue_file_path = nnue_file_path;
 	int ok_flag = 0;
 	if ((socket_fds[0] = socket_connect(deep_server_ip, deep_server_port)) >= 0)
 	{
