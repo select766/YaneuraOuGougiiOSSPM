@@ -171,19 +171,20 @@ extern "C" int yaneuraou_ios_main(const char* deep_server_ip, int deep_server_po
 	std::cin.rdbuf(ins);
     yaneuraou_gougi_deep::modelc_url_cache = deep_modelc_url;
     yaneuraou_gougi_deep::coreml_compute_units_cache = deep_coreml_compute_units;
-	if ((socket_fds[0] = socket_connect(deep_server_ip, deep_server_port)) < 0)
+	int ok_flag = 0;
+	if ((socket_fds[0] = socket_connect(deep_server_ip, deep_server_port)) >= 0)
 	{
-		return 1;
+		std::thread thread_deep(yaneuraou_gougi_deep::yaneuraou_ios_thread_main);
+		thread_deep.detach();
+		ok_flag |= 1 << 0;
 	}
-	if ((socket_fds[1] = socket_connect(nnue_server_ip, nnue_server_port)) < 0)
+	if ((socket_fds[1] = socket_connect(nnue_server_ip, nnue_server_port)) >= 0)
 	{
-		return 1;
+		std::thread thread_nnue(yaneuraou_gougi_nnue::yaneuraou_ios_thread_main);
+		thread_nnue.detach();
+		ok_flag |= 1 << 1;
 	}
-    std::thread thread_deep(yaneuraou_gougi_deep::yaneuraou_ios_thread_main);
-    thread_deep.detach();
-    std::thread thread_nnue(yaneuraou_gougi_nnue::yaneuraou_ios_thread_main);
-    thread_nnue.detach();
-    return 0;
+    return ok_flag;
 }
 
 #endif
