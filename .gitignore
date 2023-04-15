@@ -8,3 +8,6 @@ DerivedData/
 .swiftpm/xcode/package.xcworkspace/contents.xcworkspacedata
 .netrc
 /build/bin
+/build/deep/bin
+/build/nnue/bin
+/build/nnue/.dl

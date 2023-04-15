@@ -56,6 +56,29 @@ namespace YANEURAOU_GOUGI_NAMESPACE {
     elif path.name == "config.h":
         # makebook*.cppに書き換え箇所があるのでそもそもビルド対象から外す
         source = source.replace("#define ENABLE_MAKEBOOK_CMD", "")
+    elif path.name == "thread.h":
+        source = source + """
+void register_iostream_thread(int engine_id);
+#ifndef REGISTER_IOSTREAM_THREAD
+#define REGISTER_IOSTREAM_THREAD
+inline void register_iostream_thread()
+{
+#if defined(YANEURAOU_ENGINE_DEEP)
+register_iostream_thread(0);
+#elif defined(YANEURAOU_ENGINE_NNUE)
+register_iostream_thread(1);
+#else
+#error YANEURAOU_ENGINE_DEEP nor YANEURAOU_ENGINE_NNUE is defined.
+#endif
+}
+#endif
+"""
+    elif path.name == "thread.cpp":
+        source = source.replace("void Thread::idle_loop() {", """void Thread::idle_loop() {
+register_iostream_thread();
+""")
+    elif path.name == "yaneuraou-search.cpp":
+        source = source.replace("::search<Root>", "YANEURAOU_GOUGI_NAMESPACE::search<Root>")
     return source
 
 def modify_source(path: Path):
@@ -66,7 +89,7 @@ def modify_source(path: Path):
     out_lines.append(OPEN_LINE)
     for line in source_lines:
         if line == OPEN_LINE:
-            raise ValueError("The source is already modified")
+            raise ValueError("The source is already modified. Run 'git checkout .' in yaneuraou repository.")
         if re.match("\\s*#include", line):
             out_lines.append(CLOSE_LINE)
             out_lines.append(line)
