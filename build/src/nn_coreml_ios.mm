@@ -155,24 +155,35 @@ namespace Eval::dlshogi
 				memcpy(&input_buf[(sizeof(NN_Input1) + sizeof(NN_Input2)) / sizeof(DType) * i + sizeof(NN_Input1) / sizeof(DType)], &x2[i], sizeof(NN_Input2));
 			}
 
-			MLMultiArray *model_input = [[MLMultiArray alloc] initWithDataPointer:input_buf shape:@[[NSNumber numberWithInt:fixed_batch_size], @((size_t)COLOR_NB * MAX_FEATURES1_NUM + MAX_FEATURES2_NUM), @9, @9] dataType:MLMultiArrayDataTypeFloat32 strides:@[@(((size_t)COLOR_NB * MAX_FEATURES1_NUM + MAX_FEATURES2_NUM) * 9 * 9), @(9 * 9), @9, @1] deallocator:NULL error:&error];
-			if (error) {
-				sync_cout << [[NSString stringWithFormat:@"info string CoreML inference array allocation failed, %@", error] UTF8String] << sync_endl;
-				Tools::exit();
+			// 偶発的に失敗することがあるため、実験的に再試行機能を実装
+			int retry_count = -1;
+			while (true) {
+				retry_count++;
+				if (retry_count > 0) {
+					std::cerr << "CoreML inference retry=" << retry_count << std::endl;
+				}
+				MLMultiArray *model_input = [[MLMultiArray alloc] initWithDataPointer:input_buf shape:@[[NSNumber numberWithInt:fixed_batch_size], @((size_t)COLOR_NB * MAX_FEATURES1_NUM + MAX_FEATURES2_NUM), @9, @9] dataType:MLMultiArrayDataTypeFloat32 strides:@[@(((size_t)COLOR_NB * MAX_FEATURES1_NUM + MAX_FEATURES2_NUM) * 9 * 9), @(9 * 9), @9, @1] deallocator:NULL error:&error];
+				if (error) {
+					sync_cout << [[NSString stringWithFormat:@"info string CoreML inference array allocation failed, %@", error] UTF8String] << sync_endl;
+					std::cerr << [[NSString stringWithFormat:@"info string CoreML inference array allocation failed, %@", error] UTF8String] << std::endl;
+					continue;
+				}
+
+				DlShogiResnetInput *input_ = [[DlShogiResnetInput alloc] initWithInput:model_input];
+				id<MLFeatureProvider> out_features = [model predictionFromFeatures:input_ options:[[MLPredictionOptions alloc] init] error:&error];
+				if (error) {
+					sync_cout << [[NSString stringWithFormat:@"info string CoreML inference failed, %@", error] UTF8String] << sync_endl;
+					std::cerr << [[NSString stringWithFormat:@"info string CoreML inference failed, %@", error] UTF8String] << std::endl;
+					continue;
+				}
+
+				DlShogiResnetOutput *model_output = [[DlShogiResnetOutput alloc] initWithOutput_policy:(MLMultiArray *)[out_features featureValueForName:@"output_policy"].multiArrayValue output_value:(MLMultiArray *)[out_features featureValueForName:@"output_value"].multiArrayValue];
+
+				// 出力は動的確保された領域に書き出されるため、これを引数で指定されたバッファにコピー
+				memcpy(y1, model_output.output_policy.dataPointer, batch_size * MAX_MOVE_LABEL_NUM * (size_t)SQ_NB * sizeof(DType));
+				memcpy(y2, model_output.output_value.dataPointer, batch_size * sizeof(DType));
+				break;
 			}
-
-			DlShogiResnetInput *input_ = [[DlShogiResnetInput alloc] initWithInput:model_input];
-			id<MLFeatureProvider> out_features = [model predictionFromFeatures:input_ options:[[MLPredictionOptions alloc] init] error:&error];
-			if (error) {
-				sync_cout << [[NSString stringWithFormat:@"info string CoreML inference failed, %@", error] UTF8String] << sync_endl;
-				Tools::exit();
-			}
-
-			DlShogiResnetOutput *model_output = [[DlShogiResnetOutput alloc] initWithOutput_policy:(MLMultiArray *)[out_features featureValueForName:@"output_policy"].multiArrayValue output_value:(MLMultiArray *)[out_features featureValueForName:@"output_value"].multiArrayValue];
-
-			// 出力は動的確保された領域に書き出されるため、これを引数で指定されたバッファにコピー
-			memcpy(y1, model_output.output_policy.dataPointer, batch_size * MAX_MOVE_LABEL_NUM * (size_t)SQ_NB * sizeof(DType));
-			memcpy(y2, model_output.output_value.dataPointer, batch_size * sizeof(DType));
 		}
 	}
 
