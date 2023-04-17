@@ -1,8 +1,8 @@
-# FukauraOuiOSSPM
+# YaneuraOuGougiiOSSPM
 
-ふかうら王（やねうら王の深層学習版）をiOS向けのSwift Package Managerパッケージとしてビルドするスクリプト。
+やねうら王（NNUE評価関数）とふかうら王（やねうら王の深層学習版）を単一プロセスで両方動作させられるiOS向けのSwift Package Managerパッケージとしてビルドするスクリプト。
 
-モデルは含まれていない。このパッケージを読み込むSwiftアプリ側に組み込んで、そのアドレスを渡す必要がある。アプリ側の実装: https://github.com/select766/FukauraOuiOS
+モデルは含まれていない。このパッケージを読み込むSwiftアプリ側に組み込んで、そのアドレスを渡す必要がある。アプリ側の実装: https://github.com/select766/YaneuraOuGougiiOS
 
 パッケージ名は`YaneuraOuGougiiOSSPM`となっている。
 
@@ -14,7 +14,7 @@ Xcode 16.0, cmake 3.24.1
 git submodule init
 git submodule update
 cd build
-./build.bash
+./build.sh
 ```
 
 # インターフェース変更
