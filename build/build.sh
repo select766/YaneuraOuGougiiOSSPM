@@ -15,7 +15,8 @@ rm -r bin/${ENGINE} || true
 mkdir -p bin/${ENGINE}
 pushd bin/${ENGINE}
 ar x ../../${ENGINE}/bin/${ARCHDIR}/libyaneuraou.a
-for file in *; do mv "$file" "deep_$file"; done
+# .oファイルの名前の重複を回避。しかしこれをしなくてもビルドに成功する。
+for file in *; do mv "$file" "${ENGINE}_$file"; done
 popd
 done
 
