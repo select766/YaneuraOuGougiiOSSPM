@@ -9,6 +9,7 @@
 
 // cin/coutをsocketにリダイレクト
 #include <iostream>
+#include <mutex>
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/socket.h>
@@ -95,6 +96,7 @@ namespace YANEURAOU_GOUGI_NAMESPACE {
 #if defined(YANEURAOU_ENGINE_DEEP)
 static const int n_engines = 2;
 static int socket_fds[n_engines] = {0};
+static std::mutex mutex_thread_engine_map;
 static std::map<std::thread::id, int> thread_engine_map; // スレッドID -> エンジン番号(DEEP=0, NNUE=1)
 
 static int socket_connect(const char* server_ip, int server_port) {
@@ -127,6 +129,7 @@ static int socket_connect(const char* server_ip, int server_port) {
 int get_socket_for_thread()
 {
 	auto id = std::this_thread::get_id();
+	std::lock_guard<std::mutex> lock(mutex_thread_engine_map);
 	auto it = thread_engine_map.find(id);
 	if (it != thread_engine_map.end())
 	{
@@ -174,6 +177,7 @@ protected:
 
 void register_iostream_thread(int engine_id)
 {
+	std::lock_guard<std::mutex> lock(mutex_thread_engine_map);
 	thread_engine_map[std::this_thread::get_id()] = engine_id;
 }
 
